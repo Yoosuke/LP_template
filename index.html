@@ -21,14 +21,8 @@
             height: 100vh;
         }
         .swiper-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            min-height: 100vh; /* 修正: 高さをしっかり確保 */
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative;
+            height: auto !important;
+            min-height: 100vh !important;
         }
         .header {
             position: absolute;
@@ -144,16 +138,20 @@
                 const swiper = new Swiper('.swiper', {
                     direction: 'vertical',
                     loop: false,
+                    autoHeight: false, // 高さの自動計算をオフにする
                     pagination: {
                         el: '.swiper-pagination',
                         clickable: true,
                     },
                     allowTouchMove: true,
                 });
+                
         
                 // Swiperにスライドの変更を認識させる
                 swiper.update();
-                console.log("Swiper initialized and updated");
+                document.querySelectorAll('.swiper-slide').forEach(slide => {
+                    slide.style.height = 'auto';
+                });
         
             } catch (error) {
                 console.error(error);
