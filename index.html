@@ -25,7 +25,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh; /* 修正: 高さをしっかり確保 */
             padding: 20px;
             box-sizing: border-box;
             position: relative;
@@ -93,59 +93,64 @@
                 document.title = config.siteTitle;
                 
                 const swiperWrapper = document.getElementById('swiper-wrapper');
-
+        
                 for (let i = 0; i < config.sections.length; i++) {
                     const section = config.sections[i];
                     try {
                         const sectionResponse = await fetch(section.htmlFile);
                         if (!sectionResponse.ok) throw new Error(`Failed to load ${section.htmlFile}`);
                         const sectionHtml = await sectionResponse.text();
-
+        
                         let slide = document.createElement('div');
                         slide.className = 'swiper-slide text-white';
-                        
+                        slide.style.minHeight = '100vh';  // 高さを確保
+        
                         if (i === 0) {
                             let header = document.createElement('div');
                             header.className = 'header';
                             header.innerHTML = `<h1>${config.headerTitle}</h1>`;
                             slide.appendChild(header);
                         }
-                        
+        
                         if (section.backgroundImage) {
                             slide.style.background = `url('${section.backgroundImage}') no-repeat center center/cover`;
                         }
-
+        
                         let sectionContent = document.createElement('div');
                         sectionContent.innerHTML = sectionHtml;
                         slide.appendChild(sectionContent);
-
+        
                         if (section.image) {
                             let img = document.createElement('img');
                             img.src = section.image;
                             img.className = 'w-2/3 mt-4 rounded-lg shadow-lg';
                             slide.appendChild(img);
                         }
-                        
+        
                         swiperWrapper.appendChild(slide);
                     } catch (error) {
                         console.error(error);
                     }
                 }
-
-                new Swiper('.swiper', {
-                    direction: 'vertical',
-                    loop: false,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                    allowTouchMove: true,
-                });
+        
+                // ここでSwiperを初期化（すべてのスライドが追加された後）
+                setTimeout(() => {
+                    new Swiper('.swiper', {
+                        direction: 'vertical',
+                        loop: false,
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        allowTouchMove: true,
+                    });
+                }, 100); // 少し遅延させることで、スライドが正しく描画されるようにする
+        
             } catch (error) {
                 console.error(error);
             }
         });
-    </script>
+</script>
 </head>
 <body>
     <div class="swiper-container">
