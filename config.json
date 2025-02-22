@@ -9,12 +9,12 @@
         {
             "title": "特徴",
             "text": "スワイプでコンテンツを切り替えられます。",
-            "backgroundImage": "images/bg2.jpg"
+            "backgroundImage": "images/sample.jpg"
         },
         {
             "title": "お問い合わせ",
             "text": "フォームからお問い合わせください。",
-            "backgroundImage": "images/bg3.jpg"
+            "backgroundImage": "images/bg.jpg"
         }
     ]
 }
