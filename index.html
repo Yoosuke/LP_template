@@ -84,15 +84,16 @@
         }
     </style>
     <script>
-        document.addEventListener("DOMContentLoaded", async function() {
+        document.addEventListener("DOMContentLoaded", async function () {
             try {
                 const response = await fetch('config.json');
                 if (!response.ok) throw new Error('Failed to load config.json');
                 const config = await response.json();
-                
+        
                 document.title = config.siteTitle;
-                
+        
                 const swiperWrapper = document.getElementById('swiper-wrapper');
+                const slides = [];
         
                 // 非同期で全セクションをロードする
                 const sectionPromises = config.sections.map(async (section, index) => {
@@ -127,17 +128,20 @@
                             slide.appendChild(img);
                         }
         
-                        swiperWrapper.appendChild(slide);
+                        slides.push(slide);
                     } catch (error) {
                         console.error(error);
                     }
                 });
         
-                // すべてのセクションのロードが完了するのを待つ
+                // すべてのセクションのロードを待つ
                 await Promise.all(sectionPromises);
         
-                // Swiperを初期化
-                new Swiper('.swiper', {
+                // スライドを追加
+                slides.forEach(slide => swiperWrapper.appendChild(slide));
+        
+                // Swiperの初期化
+                const swiper = new Swiper('.swiper', {
                     direction: 'vertical',
                     loop: false,
                     pagination: {
@@ -147,10 +151,15 @@
                     allowTouchMove: true,
                 });
         
+                // Swiperにスライドの変更を認識させる
+                swiper.update();
+                console.log("Swiper initialized and updated");
+        
             } catch (error) {
                 console.error(error);
             }
-        });            
+        });
+                   
     </script>
 </head>
 <body>
