@@ -10,24 +10,30 @@
     <style>
         .floating-form {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
             background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
+            padding: 15px;
+            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 9999;
         }
         .floating-form form {
             display: flex;
             gap: 10px;
+            width: 100%;
         }
         .floating-form input {
+            flex: 1;
             padding: 10px;
             border: none;
             border-radius: 5px;
-            width: 250px;
+            width: 100%;
         }
         .floating-form button {
             background: #1E90FF;
@@ -36,6 +42,14 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: calc(100vh - 80px);
+            padding-bottom: 80px;
         }
     </style>
     <script>
@@ -54,7 +68,7 @@
                 const sectionHtml = await sectionResponse.text();
 
                 let slide = document.createElement('div');
-                slide.className = 'swiper-slide h-screen flex justify-center items-center flex-col text-white';
+                slide.className = 'swiper-slide text-white';
                 
                 if (section.backgroundImage) {
                     slide.style.background = `url('${section.backgroundImage}') no-repeat center center/cover`;
