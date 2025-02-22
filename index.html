@@ -41,6 +41,51 @@
             background-repeat: no-repeat;
         }
 
+        /* メール登録フォームを下部に固定 */
+        .bottom-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .floating-form {
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .floating-form input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .floating-form button {
+            background: #1E90FF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .copyright {
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
         /* モバイル対応 */
         @media screen and (max-width: 768px) {
             .swiper-slide {
@@ -59,6 +104,15 @@
         <div class="swiper-pagination"></div>
     </div>
 
+    <!-- メール登録フォーム -->
+    <div class="bottom-container">
+        <form class="floating-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <input type="email" name="email" placeholder="メールアドレスを入力" required>
+            <button type="submit">登録する</button>
+        </form>
+        <p class="copyright">© 2025 カスタムLP</p>
+    </div>
+
     <!-- トラッキングコードを読み込む -->
     <script src="tracking.html"></script>
 
@@ -72,6 +126,7 @@
                 document.title = config.siteTitle;
 
                 const swiperWrapper = document.getElementById('swiper-wrapper');
+                const slides = new Array(config.sections.length); // スライドの順序を確保する配列
 
                 // 非同期で各セクションのHTMLを読み込む
                 const sectionPromises = config.sections.map(async (section, index) => {
@@ -92,13 +147,16 @@
                         sectionContent.innerHTML = sectionHtml;
                         slide.appendChild(sectionContent);
 
-                        swiperWrapper.appendChild(slide);
+                        slides[index] = slide; // 正しい順番で配列に格納
                     } catch (error) {
                         console.error(error);
                     }
                 });
 
                 await Promise.all(sectionPromises);
+
+                // 順番通りにスライドを追加
+                slides.forEach(slide => swiperWrapper.appendChild(slide));
 
                 // Swiperの初期化
                 new Swiper('.swiper', {
