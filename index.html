@@ -8,6 +8,47 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            flex: 0 0 60px;
+            background: #333;
+            color: white;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        footer {
+            flex: 0 0 60px;
+            background: #222;
+            color: white;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .swiper-container {
+            flex: 1;
+            height: calc(100vh - 120px);
+        }
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
         .floating-form {
             position: fixed;
             bottom: 10px;
@@ -42,21 +83,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-        }
-        .swiper-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: calc(100vh - 100px);
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        @media (min-width: 1024px) {
-            .swiper-slide {
-                height: calc(100vh - 120px);
-                padding: 40px;
-            }
         }
     </style>
     <script>
@@ -110,18 +136,22 @@
         });
     </script>
 </head>
-<body class="bg-gray-900 text-white">
-    <header class="p-4 bg-gray-800 text-center">
-        <h1 id="header-title" class="text-xl">Loading...</h1>
-    </header>
-    <div class="swiper h-screen">
-        <div class="swiper-wrapper" id="swiper-wrapper">
+<body>
+    <div class="container">
+        <header>
+            <h1 id="header-title">Loading...</h1>
+        </header>
+        <div class="swiper-container">
+            <div class="swiper h-full">
+                <div class="swiper-wrapper" id="swiper-wrapper">
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
         </div>
-        <div class="swiper-pagination"></div>
+        <footer>
+            <p id="footer-text">Loading...</p>
+        </footer>
     </div>
-    <footer class="p-4 bg-gray-800 text-center">
-        <p id="footer-text">Loading...</p>
-    </footer>
     <div class="floating-form">
         <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
             <input type="email" name="email" placeholder="メールアドレスを入力" required>
