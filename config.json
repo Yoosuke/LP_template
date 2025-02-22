@@ -1,0 +1,20 @@
+{
+    "siteTitle": "カスタムLP",
+    "headerTitle": "ようこそ！",
+    "footerText": "© 2025 カスタムLP",
+    "sections": [
+        {
+            "htmlFile": "sections/section1.html",
+            "backgroundImage": "images/bg.jpg",
+            "image": "images/sample.jpg"
+        },
+        {
+            "htmlFile": "sections/section2.html",
+            "backgroundImage": "images/bg.jpg"
+        },
+        {
+            "htmlFile": "sections/section3.html",
+            "image": "images/sample.jpg"
+        }
+    ]
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LP Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const response = await fetch('config.json');
+            const config = await response.json();
+            
+            document.title = config.siteTitle;
+            document.getElementById('header-title').innerText = config.headerTitle;
+            document.getElementById('footer-text').innerText = config.footerText;
+            
+            const swiperWrapper = document.getElementById('swiper-wrapper');
+
+            for (const section of config.sections) {
+                const sectionResponse = await fetch(section.htmlFile);
+                const sectionHtml = await sectionResponse.text();
+
+                let slide = document.createElement('div');
+                slide.className = 'swiper-slide h-screen flex justify-center items-center flex-col text-white';
+                
+                // 背景画像が設定されている場合
+                if (section.backgroundImage) {
+                    slide.style.background = `url('${section.backgroundImage}') no-repeat center center/cover`;
+                }
+
+                let sectionContent = document.createElement('div');
+                sectionContent.innerHTML = sectionHtml;
+                slide.appendChild(sectionContent);
+
+                // 画像が設定されている場合（背景とは別に表示）
+                if (section.image) {
+                    let img = document.createElement('img');
+                    img.src = section.image;
+                    img.className = 'w-2/3 mt-4 rounded-lg shadow-lg';
+                    slide.appendChild(img);
+                }
+                
+                swiperWrapper.appendChild(slide);
+            }
+
+            new Swiper('.swiper', {
+                direction: 'vertical',
+                loop: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+            });
+
+            const trackingResponse = await fetch('tracking.html');
+            const trackingHtml = await trackingResponse.text();
+            document.body.insertAdjacentHTML('beforeend', trackingHtml);
+        });
+    </script>
+</head>
+<body class="bg-gray-900 text-white">
+    <header class="p-4 bg-gray-800 text-center">
+        <h1 id="header-title" class="text-xl">Loading...</h1>
+    </header>
+    <div class="swiper h-screen">
+        <div class="swiper-wrapper" id="swiper-wrapper">
+            <!-- Slides will be inserted here dynamically -->
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <footer class="p-4 bg-gray-800 text-center">
+        <p id="footer-text">Loading...</p>
+    </footer>
+</body>
+</html>
