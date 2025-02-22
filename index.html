@@ -11,43 +11,47 @@
         body, html {
             height: 100%;
             margin: 0;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        header {
-            flex: 0 0 60px;
+        .header {
+            height: 60px;
             background: #333;
             color: white;
-            text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        footer {
-            flex: 0 0 60px;
-            background: #222;
-            color: white;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
         }
         .swiper-container {
-            flex: 1;
-            height: calc(100vh - 120px);
+            position: absolute;
+            top: 60px;
+            bottom: 0;
+            width: 100%;
         }
         .swiper-slide {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            height: calc(100vh - 60px);
             padding: 20px;
             box-sizing: border-box;
+        }
+        .footer {
+            height: 60px;
+            background: #222;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: relative;
         }
         .floating-form {
             position: fixed;
@@ -92,11 +96,11 @@
             
             document.title = config.siteTitle;
             document.getElementById('header-title').innerText = config.headerTitle;
-            document.getElementById('footer-text').innerText = config.footerText;
             
             const swiperWrapper = document.getElementById('swiper-wrapper');
 
-            for (const section of config.sections) {
+            for (let i = 0; i < config.sections.length; i++) {
+                const section = config.sections[i];
                 const sectionResponse = await fetch(section.htmlFile);
                 const sectionHtml = await sectionResponse.text();
 
@@ -119,11 +123,18 @@
                 }
                 
                 swiperWrapper.appendChild(slide);
+
+                if (i === config.sections.length - 1) {
+                    let footer = document.createElement('div');
+                    footer.className = 'footer';
+                    footer.innerHTML = `<p>${config.footerText}</p>`;
+                    slide.appendChild(footer);
+                }
             }
 
             new Swiper('.swiper', {
                 direction: 'vertical',
-                loop: true,
+                loop: false,
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true,
@@ -137,20 +148,15 @@
     </script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 id="header-title">Loading...</h1>
-        </header>
-        <div class="swiper-container">
-            <div class="swiper h-full">
-                <div class="swiper-wrapper" id="swiper-wrapper">
-                </div>
-                <div class="swiper-pagination"></div>
+    <div class="header">
+        <h1 id="header-title">Loading...</h1>
+    </div>
+    <div class="swiper-container">
+        <div class="swiper h-full">
+            <div class="swiper-wrapper" id="swiper-wrapper">
             </div>
+            <div class="swiper-pagination"></div>
         </div>
-        <footer>
-            <p id="footer-text">Loading...</p>
-        </footer>
     </div>
     <div class="floating-form">
         <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
