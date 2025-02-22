@@ -1,20 +1,20 @@
 {
     "siteTitle": "カスタムLP",
-    "headerTitle": "ようこそ！",
-    "footerText": "© 2025 カスタムLP",
     "sections": [
         {
-            "htmlFile": "sections/section1.html",
-            "backgroundImage": "images/bg.jpg",
-            "image": "images/sample.jpg"
-        },
-        {
-            "htmlFile": "sections/section2.html",
+            "title": "ようこそ！",
+            "text": "このページはシンプルなスワイプ型LPです。",
             "backgroundImage": "images/bg.jpg"
         },
         {
-            "htmlFile": "sections/section3.html",
-            "image": "images/sample.jpg"
+            "title": "特徴",
+            "text": "スワイプでコンテンツを切り替えられます。",
+            "backgroundImage": "images/bg2.jpg"
+        },
+        {
+            "title": "お問い合わせ",
+            "text": "フォームからお問い合わせください。",
+            "backgroundImage": "images/bg3.jpg"
         }
     ]
 }
