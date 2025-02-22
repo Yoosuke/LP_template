@@ -117,62 +117,65 @@
     <script src="tracking.html"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", async function () {
-            try {
-                const response = await fetch('config.json');
-                if (!response.ok) throw new Error('Failed to load config.json');
-                const config = await response.json();
-
-                document.title = config.siteTitle;
-
-                const swiperWrapper = document.getElementById('swiper-wrapper');
-                const slides = new Array(config.sections.length); // スライドの順序を確保する配列
-
-                // 非同期で各セクションのHTMLを読み込む
-                const sectionPromises = config.sections.map(async (section, index) => {
-                    try {
-                        const sectionResponse = await fetch(section.htmlFile);
-                        if (!sectionResponse.ok) throw new Error(`Failed to load ${section.htmlFile}`);
-                        const sectionHtml = await sectionResponse.text();
-
-                        let slide = document.createElement('div');
-                        slide.className = 'swiper-slide';
-
-                        if (section.backgroundImage) {
-                            slide.classList.add('has-bg');
-                            slide.style.backgroundImage = `url('${section.backgroundImage}')`;
+            document.addEventListener("DOMContentLoaded", async function () {
+                try {
+                    const response = await fetch('config.json');
+                    if (!response.ok) throw new Error('Failed to load config.json');
+                    const config = await response.json();
+        
+                    document.title = config.siteTitle;
+        
+                    const swiperWrapper = document.getElementById('swiper-wrapper');
+                    const slides = new Array(config.sections.length); // スライドの順序を確保する配列
+        
+                    // 非同期で各セクションのHTMLを読み込む
+                    const sectionPromises = config.sections.map(async (section, index) => {
+                        try {
+                            const sectionResponse = await fetch(section.htmlFile);
+                            if (!sectionResponse.ok) throw new Error(`Failed to load ${section.htmlFile}`);
+                            const sectionHtml = await sectionResponse.text();
+        
+                            let slide = document.createElement('div');
+                            slide.className = 'swiper-slide';
+        
+                            if (section.backgroundImage) {
+                                slide.classList.add('has-bg');
+                                slide.style.backgroundImage = `url('${section.backgroundImage}')`;
+                            }
+        
+                            let sectionContent = document.createElement('div');
+                            sectionContent.innerHTML = sectionHtml;
+                            slide.appendChild(sectionContent);
+        
+                            slides[index] = slide; // 正しい順番で配列に格納
+                        } catch (error) {
+                            console.error(error);
                         }
-
-                        let sectionContent = document.createElement('div');
-                        sectionContent.innerHTML = sectionHtml;
-                        slide.appendChild(sectionContent);
-
-                        slides[index] = slide; // 正しい順番で配列に格納
-                    } catch (error) {
-                        console.error(error);
-                    }
-                });
-
-                await Promise.all(sectionPromises);
-
-                // 順番通りにスライドを追加
-                slides.forEach(slide => swiperWrapper.appendChild(slide));
-
-                // Swiperの初期化
-                new Swiper('.swiper', {
-                    direction: 'vertical',
-                    loop: false,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                    allowTouchMove: true,
-                });
-
-            } catch (error) {
-                console.error(error);
-            }
-        });
+                    });
+        
+                    await Promise.all(sectionPromises);
+        
+                    // 順番通りにスライドを追加
+                    slides.forEach(slide => swiperWrapper.appendChild(slide));
+        
+                    // **PCでもスワイプ操作を可能にする**
+                    new Swiper('.swiper', {
+                        direction: 'vertical',
+                        loop: false,
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        allowTouchMove: true,  // タッチスワイプを許可
+                        simulateTouch: true,  // マウスドラッグでスワイプ可能にする
+                        mousewheel: true,  // マウスホイールでスライド可能にする
+                        grabCursor: true,  // カーソルを「手」に変更
+                    });
+        
+                } catch (error) {
+                    console.error(error);
+                }
+            });        
     </script>
 
 </body>
