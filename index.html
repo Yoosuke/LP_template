@@ -31,6 +31,14 @@
             box-sizing: border-box;
             font-size: 1.2rem;
             color: white;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .swiper-slide.has-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         /* モバイル対応 */
@@ -46,10 +54,13 @@
 
     <div class="swiper">
         <div class="swiper-wrapper" id="swiper-wrapper">
-            <!-- ここにJavaScriptでスライドを動的に追加 -->
+            <!-- JavaScriptでスライドを動的に追加 -->
         </div>
         <div class="swiper-pagination"></div>
     </div>
+
+    <!-- トラッキングコードを読み込む -->
+    <script src="tracking.html"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
@@ -62,21 +73,32 @@
 
                 const swiperWrapper = document.getElementById('swiper-wrapper');
 
-                // 各セクションを動的に追加
-                config.sections.forEach((section, index) => {
-                    let slide = document.createElement('div');
-                    slide.className = 'swiper-slide';
-                    slide.style.background = `url('${section.backgroundImage}') center center / cover no-repeat`;
+                // 非同期で各セクションのHTMLを読み込む
+                const sectionPromises = config.sections.map(async (section, index) => {
+                    try {
+                        const sectionResponse = await fetch(section.htmlFile);
+                        if (!sectionResponse.ok) throw new Error(`Failed to load ${section.htmlFile}`);
+                        const sectionHtml = await sectionResponse.text();
 
-                    let title = document.createElement('h1');
-                    title.textContent = section.title;
-                    let text = document.createElement('p');
-                    text.textContent = section.text;
+                        let slide = document.createElement('div');
+                        slide.className = 'swiper-slide';
 
-                    slide.appendChild(title);
-                    slide.appendChild(text);
-                    swiperWrapper.appendChild(slide);
+                        if (section.backgroundImage) {
+                            slide.classList.add('has-bg');
+                            slide.style.backgroundImage = `url('${section.backgroundImage}')`;
+                        }
+
+                        let sectionContent = document.createElement('div');
+                        sectionContent.innerHTML = sectionHtml;
+                        slide.appendChild(sectionContent);
+
+                        swiperWrapper.appendChild(slide);
+                    } catch (error) {
+                        console.error(error);
+                    }
                 });
+
+                await Promise.all(sectionPromises);
 
                 // Swiperの初期化
                 new Swiper('.swiper', {
