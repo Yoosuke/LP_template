@@ -87,9 +87,9 @@
                 document.title = config.siteTitle;
         
                 const swiperWrapper = document.getElementById('swiper-wrapper');
-                const slides = [];
+                const slides = new Array(config.sections.length); // 配列の順番を保持する
         
-                // 非同期で全セクションをロードする
+                // 非同期で全セクションをロード
                 const sectionPromises = config.sections.map(async (section, index) => {
                     try {
                         const sectionResponse = await fetch(section.htmlFile);
@@ -98,7 +98,10 @@
         
                         let slide = document.createElement('div');
                         slide.className = 'swiper-slide text-white';
-                        slide.style.minHeight = '100vh';  // 高さを確保
+                        slide.style.minHeight = '100vh';
+                        slide.style.opacity = '1';
+                        slide.style.display = 'block';
+                        slide.style.visibility = 'visible';
         
                         if (index === 0) {
                             let header = document.createElement('div');
@@ -122,41 +125,39 @@
                             slide.appendChild(img);
                         }
         
-                        slides.push(slide);
+                        slides[index] = slide; // 順番を保持
                     } catch (error) {
                         console.error(error);
                     }
                 });
         
-                // すべてのセクションのロードを待つ
                 await Promise.all(sectionPromises);
         
-                // スライドを追加
+                // **順番通りに** スライドを追加
                 slides.forEach(slide => swiperWrapper.appendChild(slide));
         
-                // Swiperの初期化
-                const swiper = new Swiper('.swiper', {
+                console.log("Swiper initialized. Total slides:", document.querySelectorAll('.swiper-slide').length);
+        
+                // **Swiperの再初期化**
+                let swiper = new Swiper('.swiper', {
                     direction: 'vertical',
                     loop: false,
-                    autoHeight: false, // 高さの自動計算をオフにする
+                    autoHeight: false, // 高さを固定
                     pagination: {
                         el: '.swiper-pagination',
                         clickable: true,
                     },
                     allowTouchMove: true,
                 });
-                
         
-                // Swiperにスライドの変更を認識させる
                 swiper.update();
-                document.querySelectorAll('.swiper-slide').forEach(slide => {
-                    slide.style.height = 'auto';
-                });
+                console.log("Swiper updated. Swiper slides:", swiper.slides);
         
             } catch (error) {
                 console.error(error);
             }
         });
+        
                    
     </script>
 </head>
