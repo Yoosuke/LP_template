@@ -94,8 +94,8 @@
                 
                 const swiperWrapper = document.getElementById('swiper-wrapper');
         
-                for (let i = 0; i < config.sections.length; i++) {
-                    const section = config.sections[i];
+                // 非同期で全セクションをロードする
+                const sectionPromises = config.sections.map(async (section, index) => {
                     try {
                         const sectionResponse = await fetch(section.htmlFile);
                         if (!sectionResponse.ok) throw new Error(`Failed to load ${section.htmlFile}`);
@@ -105,7 +105,7 @@
                         slide.className = 'swiper-slide text-white';
                         slide.style.minHeight = '100vh';  // 高さを確保
         
-                        if (i === 0) {
+                        if (index === 0) {
                             let header = document.createElement('div');
                             header.className = 'header';
                             header.innerHTML = `<h1>${config.headerTitle}</h1>`;
@@ -131,25 +131,27 @@
                     } catch (error) {
                         console.error(error);
                     }
-                }
+                });
         
-                // ここでSwiperを初期化（すべてのスライドが追加された後）
-                setTimeout(() => {
-                    new Swiper('.swiper', {
-                        direction: 'vertical',
-                        loop: false,
-                        pagination: {
-                            el: '.swiper-pagination',
-                            clickable: true,
-                        },
-                        allowTouchMove: true,
-                    });
-                }, 100); // 少し遅延させることで、スライドが正しく描画されるようにする
+                // すべてのセクションのロードが完了するのを待つ
+                await Promise.all(sectionPromises);
+        
+                // Swiperを初期化
+                new Swiper('.swiper', {
+                    direction: 'vertical',
+                    loop: false,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    allowTouchMove: true,
+                });
         
             } catch (error) {
                 console.error(error);
             }
         });
+        
 </script>
 </head>
 <body>
