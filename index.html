@@ -7,6 +7,37 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <style>
+        .floating-form {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .floating-form form {
+            display: flex;
+            gap: 10px;
+        }
+        .floating-form input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 250px;
+        }
+        .floating-form button {
+            background: #1E90FF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
     <script>
         document.addEventListener("DOMContentLoaded", async function() {
             const response = await fetch('config.json');
@@ -25,7 +56,6 @@
                 let slide = document.createElement('div');
                 slide.className = 'swiper-slide h-screen flex justify-center items-center flex-col text-white';
                 
-                // 背景画像が設定されている場合
                 if (section.backgroundImage) {
                     slide.style.background = `url('${section.backgroundImage}') no-repeat center center/cover`;
                 }
@@ -34,7 +64,6 @@
                 sectionContent.innerHTML = sectionHtml;
                 slide.appendChild(sectionContent);
 
-                // 画像が設定されている場合（背景とは別に表示）
                 if (section.image) {
                     let img = document.createElement('img');
                     img.src = section.image;
@@ -66,12 +95,17 @@
     </header>
     <div class="swiper h-screen">
         <div class="swiper-wrapper" id="swiper-wrapper">
-            <!-- Slides will be inserted here dynamically -->
         </div>
         <div class="swiper-pagination"></div>
     </div>
     <footer class="p-4 bg-gray-800 text-center">
         <p id="footer-text">Loading...</p>
     </footer>
+    <div class="floating-form">
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <input type="email" name="email" placeholder="メールアドレスを入力" required>
+            <button type="submit">申し込む</button>
+        </form>
+    </div>
 </body>
 </html>
